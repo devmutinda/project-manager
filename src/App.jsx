@@ -2,16 +2,20 @@ import SideTab from "./components/SideTab";
 import NoProject from "./components/NoProject"
 import CreateProject from "./components/CreateProject"
 import ViewProject from "./components/ViewProject";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 function App() {
   const [projects, setProjects] = useState([]);
-  const [project, setProject] = useState({});
-  const [viewProject, setViewProject] = useState(false);
+  const [project, setProject] = useState({viewProject: false});
   const [isCreateProject, setIsCreateProject] = useState(false);
-  // let project = useRef();
+
   function showCreateProject(bool=true) {
-    setViewProject(false);
+    setProject((prevProject) =>
+      ({
+        ...prevProject,
+        viewProject: false,
+      })
+    );
     setIsCreateProject(bool);
   }
 
@@ -19,17 +23,14 @@ function App() {
     setProjects((prevProjects) => {
       return [
         ...prevProjects,
-        newProject
+        newProject,
       ];
     });
     setIsCreateProject(false);
   }
 
   function showProjectDetails(selectedProject, index) {
-    // project.current = selectedProject;
-    console.log({...selectedProject, index});
-    setProject({...selectedProject, index});
-    setViewProject(true);
+    setProject({ ...selectedProject, index, viewProject: true });
   }
 
   function saveTask(task) {
@@ -39,20 +40,45 @@ function App() {
           ...prevTasks,
           task,
       ]
-
       return { ...prev,tasks, }
     });
-    if (setViewProject) {
-      projects[project.index] = project;
-    }
   }
+
+  function deleteTask(i) {
+    setProject((prev) => {
+      const tasks = [...prev.tasks];
+      tasks.splice(i, 1);
+      // console.log(tasks);
+      return { ...prev, tasks };
+    });
+  }
+
+  function deleteProject() {
+    setProjects((prev) => {
+      const prevProjects = [...prev];
+      prevProjects.splice(project.index, 1);
+      // console.log(prevProjects)
+      return prevProjects;
+    });
+
+    setProject({ viewProject: false });
+  }
+
+  if (project.viewProject) {
+    projects[project.index] = project;
+  }
+
   return (
     <>
       <main className="h-screen my-8 flex gap-8">
         <SideTab onViewProject={showProjectDetails} projects={projects} isCreateProject={isCreateProject} onSelect={showCreateProject}/>
-        {!isCreateProject && !viewProject  && <NoProject onSelect={showCreateProject} />}
-        {isCreateProject && !viewProject && <CreateProject onSave={saveProject}  onSelect={showCreateProject}/>}
-        {viewProject && <ViewProject updateProject={saveTask} project={project}/>}
+        {project.viewProject ? 
+          <ViewProject deleteProject={deleteProject} deleteTask={deleteTask} updateProject={saveTask} project={project}/> 
+          : isCreateProject ? 
+          <CreateProject onSave={saveProject}  onSelect={showCreateProject}/> 
+          :
+          <NoProject onSelect={showCreateProject} />
+        }
       </main>
     </>
   );
