@@ -1,4 +1,4 @@
-import SideTab from "./components/SideTab";
+import SideBar from "./components/SideBar";
 import NoProject from "./components/NoProject"
 import CreateProject from "./components/CreateProject"
 import ViewProject from "./components/ViewProject";
@@ -71,7 +71,7 @@ function App() {
   return (
     <>
       <main className="h-screen my-8 flex gap-8">
-        <SideTab onViewProject={showProjectDetails} projects={projects} isCreateProject={isCreateProject} onSelect={showCreateProject}/>
+        <SideBar selectedIndex={project.index} onViewProject={showProjectDetails} projects={projects} isCreateProject={isCreateProject} onSelect={showCreateProject}/>
         {project.viewProject ? 
           <ViewProject deleteProject={deleteProject} deleteTask={deleteTask} updateProject={saveTask} project={project}/> 
           : isCreateProject ? 

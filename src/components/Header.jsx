@@ -6,7 +6,7 @@ export default function Header({ project, onSelect }) {
                 <button onClick={onSelect} className="text-stone-600 hover:text-stone-950">Delete</button>
             </div>
             <p className="mb-4 text-stone-400">{project.dueDate}</p>
-            <p className="text-stone-800">{project.description}</p>
+            <p className="text-stone-600 whitespace-pre-wrap">{project.description}</p>
         </header>
-    )
+    );
 }
