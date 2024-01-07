@@ -1,30 +1,25 @@
-import SideBar from "./components/SideBar";
-import NoProject from "./components/NoProject"
-import CreateProject from "./components/CreateProject"
-import ViewProject from "./components/ViewProject";
-import { useState } from "react";
+import SideBar from './components/SideBar';
+import NoProject from './components/NoProject';
+import CreateProject from './components/CreateProject';
+import ViewProject from './components/ViewProject';
+import { useState } from 'react';
 
 function App() {
   const [projects, setProjects] = useState([]);
-  const [project, setProject] = useState({viewProject: false});
+  const [project, setProject] = useState({ viewProject: false });
   const [isCreateProject, setIsCreateProject] = useState(false);
 
-  function showCreateProject(bool=true) {
-    setProject((prevProject) =>
-      ({
-        ...prevProject,
-        viewProject: false,
-      })
-    );
+  function showCreateProject(bool = true) {
+    setProject((prevProject) => ({
+      ...prevProject,
+      viewProject: false,
+    }));
     setIsCreateProject(bool);
   }
 
   function saveProject(newProject) {
     setProjects((prevProjects) => {
-      return [
-        ...prevProjects,
-        newProject,
-      ];
+      return [...prevProjects, newProject];
     });
     setIsCreateProject(false);
   }
@@ -34,13 +29,10 @@ function App() {
   }
 
   function saveTask(task) {
-    setProject(prev => {
+    setProject((prev) => {
       const prevTasks = prev.tasks;
-      const tasks = [
-          ...prevTasks,
-          task,
-      ]
-      return { ...prev,tasks, }
+      const tasks = [...prevTasks, task];
+      return { ...prev, tasks };
     });
   }
 
@@ -71,14 +63,25 @@ function App() {
   return (
     <>
       <main className="h-screen my-8 flex gap-8">
-        <SideBar selectedIndex={project.index} onViewProject={showProjectDetails} projects={projects} isCreateProject={isCreateProject} onSelect={showCreateProject}/>
-        {project.viewProject ? 
-          <ViewProject deleteProject={deleteProject} deleteTask={deleteTask} updateProject={saveTask} project={project}/> 
-          : isCreateProject ? 
-          <CreateProject onSave={saveProject}  onSelect={showCreateProject}/> 
-          :
+        <SideBar
+          selectedIndex={project.index}
+          onViewProject={showProjectDetails}
+          projects={projects}
+          isCreateProject={isCreateProject}
+          onSelect={showCreateProject}
+        />
+        {project.viewProject ? (
+          <ViewProject
+            deleteProject={deleteProject}
+            deleteTask={deleteTask}
+            updateProject={saveTask}
+            project={project}
+          />
+        ) : isCreateProject ? (
+          <CreateProject onSave={saveProject} onSelect={showCreateProject} />
+        ) : (
           <NoProject onSelect={showCreateProject} />
-        }
+        )}
       </main>
     </>
   );
